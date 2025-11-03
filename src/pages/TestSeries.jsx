@@ -117,7 +117,7 @@ function TestSeries() {
   };
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Header />
+  <Header />
       {/* Hero Section */}
       <section className="w-full bg-gradient-to-r from-blue-600 to-purple-500 py-14 px-2 md:px-0 text-center text-white">
         <h1 className="text-3xl md:text-4xl font-bold mb-3">Master Your Exam with Our Test Series</h1>

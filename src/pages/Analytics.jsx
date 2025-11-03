@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Header from "../components/Header/Header";
 import TestHistoryTable from "../components/TestHistoryTable";
 import { Line, Bar } from "react-chartjs-2";
 import Subject from "../components/Subject";
@@ -146,23 +147,7 @@ export default function Analytics() {
   };
   return (
     <div className="min-h-screen bg-[#f8f9fb]">
-      {/* Header */}
-      <header className="bg-white shadow-sm px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <img src="/logo.png" alt="Logo" className="h-10" />
-          <nav className="flex gap-8 text-lg font-medium text-gray-700">
-            <a href="#" className="hover:text-blue-600">Courses</a>
-            <a href="#" className="hover:text-blue-600">Test Series</a>
-            <a href="#" className="hover:text-blue-600">Pricing</a>
-            <a href="#" className="hover:text-blue-600">Contact</a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold shadow-sm hidden md:block">Browse Tests</button>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold shadow-sm">Take New Test</button>
-          <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">KS</div>
-        </div>
-      </header>
+      <Header />
 
       {/* Title & Stat Cards */}
       <div className="max-w-6xl mx-auto mt-8 px-4">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SubmitTestModal from '../components/TestSeries/SubmitTestModal';
+import Header from '../components/Header/Header';
 
 const questions = [
   {
@@ -74,19 +75,7 @@ export default function Quiz() {
 
   return (
     <div className="bg-[#fafbfc] min-h-screen">
-      {/* Header */}
-      <header className="bg-white shadow-sm px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <img src="/logo.png" alt="Logo" className="h-10" />
-          <nav className="flex gap-8 text-lg font-medium text-gray-700">
-            <a href="#" className="hover:text-blue-600">Courses</a>
-            <a href="#" className="hover:text-blue-600">Test Series</a>
-            <a href="#" className="hover:text-blue-600">Pricing</a>
-            <a href="#" className="hover:text-blue-600">Contact</a>
-          </nav>
-        </div>
-        <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">KS</div>
-      </header>
+      <Header />
       {/* Test Title */}
       <div className="bg-white border-b px-8 py-3 flex items-center gap-4 justify-between">
         <div className="flex items-center gap-4">

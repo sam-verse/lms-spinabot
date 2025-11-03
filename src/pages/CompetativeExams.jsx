@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header/Header";
 
 const testData = [
   {
@@ -96,31 +97,7 @@ export default function CompetativeExams() {
   const handleStartQuiz = () => navigate("/quiz");
   return (
     <div className="bg-[#F6F7FB] min-h-screen pb-10">
-      {/* Top Bar */}
-      <header className="bg-white/90 backdrop-blur border-b border-gray-100 px-6 md:px-10 py-3 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Logo" className="h-10" />
-            <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-700">
-              <a href="#" className="hover:text-blue-600">
-                Courses
-              </a>
-              <a href="#" className="text-blue-600">
-                Test Series
-              </a>
-              <a href="#" className="hover:text-blue-600">
-                Pricing
-              </a>
-              <a href="#" className="hover:text-blue-600">
-                Contact
-              </a>
-            </nav>
-          </div>
-        </div>
-        <div className="bg-blue-600 text-white rounded-full w-9 h-9 flex items-center justify-center text-sm font-bold">
-          KS
-        </div>
-      </header>
+      <Header />
 
       <div className="max-w-7xl mx-auto mt-8 px-4 md:px-6">
         {/* Page Title */}

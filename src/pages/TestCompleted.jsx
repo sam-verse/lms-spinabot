@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header/Header";
 
 export default function TestCompleted() {
   const navigate = useNavigate();
@@ -9,28 +10,7 @@ export default function TestCompleted() {
   return (
     <div className="min-h-screen bg-[#f8f9fb]">
       {/* Header */}
-      <header className="bg-white shadow-sm px-6 md:px-10 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <img src="/logo.png" alt="Logo" className="h-10" />
-          <nav className="hidden md:flex gap-10 text-[15px] font-semibold text-gray-700">
-            <a href="#" className="hover:text-blue-600">
-              Courses
-            </a>
-            <a href="#" className="hover:text-blue-600">
-              Test Series
-            </a>
-            <a href="#" className="hover:text-blue-600">
-              Pricing
-            </a>
-            <a href="#" className="hover:text-blue-600">
-              Contact
-            </a>
-          </nav>
-        </div>
-        <div className="bg-indigo-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
-          KS
-        </div>
-      </header>
+      <Header />
 
       {/* Gradient Banner */}
       <section className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-500 py-9 text-center text-white">
