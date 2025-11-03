@@ -9,9 +9,11 @@ const Footer = () => {
       <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 items-start px-9">
           {/* Brand Section */}
-          <div className="flex flex-col items-start md:items-start md:justify-start col-span-1 mb-8 md:mb-0">
+          <div className="flex flex-col items-start md:items-start md:justify-start col-span-1 mb-6 md:mb-0">
             <img src="/logo.png" alt="Connectek Logo" className="w-32 mb-4" />
-            <p className="mb-6 font-medium text-lg">Master your Competitive Exams</p>
+            <p className="mb-6 font-medium text-lg">Master your
+              <br />
+              <span> Competitive Exams</span></p>
             <div className="flex gap-6 mb-0 mt-2">
               <a href="#" className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-100 cursor-pointer">
                 <i className="bi bi-twitter-x text-lg"></i>
