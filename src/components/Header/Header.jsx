@@ -1,5 +1,7 @@
+
 import React, { useState } from 'react';
 import AuthModal from '../Auth/AuthModal';
+import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -40,11 +42,13 @@ const Header = () => {
       <header className="bg-white py-4 px-4 md:px-9 flex items-center border-b border-gray-200 relative shadow-sm">
         {/* Logo left */}
         <div className="flex-shrink-0 flex items-center">
-          <img src="/logo.png" alt="logo" className="h-12 w-auto object-contain drop-shadow-sm" />
+          <Link to="/">
+            <img src="/logo.png" alt="logo" className="h-12 w-auto object-contain drop-shadow-sm cursor-pointer" />
+          </Link>
         </div>
         {/* Centered nav */}
         <nav className="hidden md:flex flex-1 justify-center items-center gap-8">
-          <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Courses</a>
+          <Link to="/courses" className="text-gray-600 hover:text-gray-900 font-medium">Courses</Link>
           <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Test Series</a>
           <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Pricing</a>
           <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Contact</a>
@@ -106,7 +110,9 @@ const Header = () => {
         {/* Mobile nav drawer with rounded corners and shadow */}
         <div className={`fixed top-0 left-0 w-64 h-full bg-white shadow-2xl rounded-r-2xl z-50 transform transition-transform duration-300 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{boxShadow:'0 8px 32px 0 rgba(31, 38, 135, 0.15)'}}>
           <div className="flex items-center justify-between px-4 py-4 border-b">
-            <img src="/logo.png" alt="logo" className="h-10 w-auto object-contain" />
+            <Link to="/" onClick={() => setMobileNavOpen(false)}>
+              <img src="/logo.png" alt="logo" className="h-10 w-auto object-contain cursor-pointer" />
+            </Link>
             <button className="bg-white text-gray-700" onClick={() => setMobileNavOpen(false)} aria-label="Close menu">
               <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -125,7 +131,7 @@ const Header = () => {
             </div>
           )}
           <nav className="flex flex-col gap-2 px-4 py-6">
-            <a href="#" className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Courses</a>
+            <Link to="/courses" onClick={() => setMobileNavOpen(false)} className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Courses</Link>
             <a href="#" className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Test Series</a>
             <a href="#" className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Pricing</a>
             <a href="#" className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Contact</a>

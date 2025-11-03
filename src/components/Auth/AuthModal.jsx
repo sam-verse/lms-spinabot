@@ -6,6 +6,11 @@ import SignupForm from './SignupForm';
 const AuthModal = ({ isOpen, onClose, defaultTab = 'login', onAuthSuccess }) => {
   const [activeTab, setActiveTab] = useState(defaultTab);
 
+  // Sync activeTab with defaultTab prop
+  useEffect(() => {
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
+
   // Prevent background scroll when modal is open
   useEffect(() => {
     if (isOpen) {

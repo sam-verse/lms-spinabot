@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Clock, Users, Star, ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const FeaturedCourses = () => {
   const courses = [
@@ -85,9 +87,9 @@ const FeaturedCourses = () => {
         </div>
         
         <div className="text-center mt-12">
-          <button className="bg-white border-2 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:opacity-80 transition-colors" style={{borderColor: '#F98F14', color: '#F98F14'}}>
+          <Link to="/courses" className="bg-white border-2 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:opacity-80 transition-colors" style={{borderColor: '#F98F14', color: '#F98F14'}}>
             View All Courses
-          </button>
+          </Link>
         </div>
       </div>
     </section>
