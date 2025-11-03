@@ -49,7 +49,7 @@ const Header = () => {
         {/* Centered nav */}
         <nav className="hidden md:flex flex-1 justify-center items-center gap-8">
           <Link to="/courses" className="text-gray-600 hover:text-gray-900 font-medium">Courses</Link>
-          <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Test Series</a>
+          <Link to="/test-series" className="text-gray-600 hover:text-gray-900 font-medium">Test Series</Link>
           <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Pricing</a>
           <a href="#" className="text-gray-600 hover:text-gray-900 font-medium">Contact</a>
         </nav>
@@ -132,7 +132,7 @@ const Header = () => {
           )}
           <nav className="flex flex-col gap-2 px-4 py-6">
             <Link to="/courses" onClick={() => setMobileNavOpen(false)} className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Courses</Link>
-            <a href="#" className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Test Series</a>
+            <Link to="/test-series" onClick={() => setMobileNavOpen(false)} className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Test Series</Link>
             <a href="#" className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Pricing</a>
             <a href="#" className="text-gray-700 py-2 px-2 rounded hover:bg-blue-50 font-medium transition-colors active:bg-blue-100 focus:bg-blue-100">Contact</a>
           </nav>
