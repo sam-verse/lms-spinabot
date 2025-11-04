@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 
 import Home from './pages/Home';
 import Courses from './pages/Courses';
@@ -12,6 +13,7 @@ import Analytics from './pages/Analytics';
 
 const Router = () => (
   <BrowserRouter>
+    <ScrollToTop />
     <Routes>
   <Route path="/" element={<Home />} />
   <Route path="/courses" element={<Courses />} />

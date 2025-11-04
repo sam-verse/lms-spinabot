@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Award, BookOpen, Clock, Play, Users, CheckCircle, Share2, Download } from 'lucide-react'
 import Header from "../components/Header/Header";
 
 const testData = [
@@ -55,15 +56,17 @@ const testData = [
 
 function StatCard({ icon, title, value, accent }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex gap-4 items-center">
-      <div
-        className={`h-11 w-11 rounded-lg flex items-center justify-center ${accent}`}
-      >
-        <img src={icon} alt="stat" className="h-5 w-5" />
-      </div>
+    <div className="bg-white rounded-xl shadow-md border border-gray-100 px-6 py-4 flex items-center justify-between">
       <div className="flex flex-col">
         <span className="text-xs text-gray-500">{title}</span>
-        <span className="text-xl font-bold text-gray-900">{value}</span>
+        <span className="text-2xl md:text-3xl font-semibold text-gray-900">{value}</span>
+      </div>
+      <div className={`h-12 w-12 rounded-lg flex items-center justify-center`}>
+        {typeof icon === 'string' ? (
+          <img src={icon} alt="stat" className="h-8 w-8" />
+        ) : (
+          icon
+        )}
       </div>
     </div>
   );
@@ -71,7 +74,7 @@ function StatCard({ icon, title, value, accent }) {
 
 function Tag({ children }) {
   return (
-    <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs">
+    <span className="bg-white border border-gray-200 text-gray-700 px-2 py-0.5 rounded-md text-xs shadow-sm">
       {children}
     </span>
   );
@@ -85,16 +88,55 @@ function LevelBadge({ level }) {
   };
   return (
     <span
-      className={`ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${map[level]}`}
+      className={`ml-2 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide ${map[level]}`}
     >
       {level}
     </span>
   );
 }
 
-export default function CompetativeExams() {
+function SelectField({ children, id }) {
+  return (
+    <div className="relative">
+      <select
+        id={id}
+        className="w-full bg-gray-100 border border-gray-100 rounded-lg px-4 py-1 text-sm text-gray-700 appearance-none pr-10 shadow-sm"
+      >
+        {children}
+      </select>
+      <svg
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </div>
+  )
+}
+
+function TabButton({ label, activeClassName = "text-gray-800", inactiveClassName = "text-gray-500", right = false }) {
+  // local state handled at parent; to keep this self-contained for now we'll rely on CSS :focus/active behavior
+  return (
+    <button
+      className={`z-10 py-2 px-4 sm:px-6 text-sm font-semibold select-none focus:outline-none ${inactiveClassName}`}
+      onMouseDown={(e) => e.preventDefault()}
+    >
+      {label}
+    </button>
+  );
+}
+
+function CompetativeExams() {
   const navigate = useNavigate();
   const handleStartQuiz = () => navigate("/quiz");
+  const [activeTab, setActiveTab] = useState('available');
   return (
     <div className="bg-[#F6F7FB] min-h-screen pb-10">
       <Header />
@@ -112,157 +154,176 @@ export default function CompetativeExams() {
 
         {/* Filters Row */}
         <div className="mt-6 bg-white rounded-xl border border-gray-100 shadow-sm p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500 w-28">Select Exam Type</span>
-            <div className="flex-1">
-              <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-700">
-                <option>UPSC CSE Prelims</option>
-              </select>
-            </div>
+          <div>
+            <label htmlFor="examType" className="text-xs text-gray-500 mb-2 block">Select Exam Type</label>
+            <SelectField id="examType">
+              <option>UPSC CSE Mains</option>
+              <option>SSC CGL</option>
+              <option>State PSC</option>
+              <option>UPSC CSE Prelims</option>
+              <option>UPSC CSE Mains</option>
+              <option>SSC CGL</option>
+              <option>State PSC</option>
+              <option>UPSC CSE Prelims</option>
+            </SelectField>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500 w-28">
-              Filter by Test Type
-            </span>
-            <div className="flex-1">
-              <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-700">
-                <option>Daily Knowledge Base check</option>
-              </select>
-            </div>
+          <div>
+            <label htmlFor="testType" className="text-xs text-gray-500 mb-2 block">Filter by Test Type</label>
+            <SelectField id="testType">
+              <option>Daily Knowledge Base check</option>
+            </SelectField>
           </div>
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
           <StatCard
             title="Total Tests"
             value="156"
-            icon="/graph.svg"
+            icon="/analytics/analytics1.svg"
             accent="bg-blue-50"
           />
           <StatCard
             title="Total Questions"
             value="12.5K"
-            icon="/graph.svg"
+            icon={<BookOpen className="h-8 w-8 text-green-600" />}
             accent="bg-green-50"
           />
           <StatCard
             title="Avg. Time"
             value="90m"
-            icon="/clock.svg"
+            icon={<Clock className="h-8 w-8 text-[#9810FA]" />}
             accent="bg-indigo-50"
           />
           <StatCard
             title="Price"
             value="₹2,999"
-            icon="/enroll-icon.svg"
+            icon={<Award className="h-8 w-8 text-[#F54900]" />}
             accent="bg-orange-50"
           />
-          <StatCard
-            title="Difficulty Mix"
-            value="Easy–Hard"
-            icon="/target.svg"
-            accent="bg-purple-50"
-          />
+    
         </div>
 
-        {/* Tabs */}
-        <div className="mt-6">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-2 flex items-center gap-2 text-sm">
-            <button className="px-4 py-2 rounded-lg bg-blue-50 text-blue-600 font-semibold">
-              Available Tests
-            </button>
-            <button className="px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-50">
-              Syllabus Coverage
-            </button>
-          </div>
-        </div>
+        {/* Tabs moved into left column so the pill width matches the cards area */}
 
         {/* Main content */}
         <div className="mt-6 flex flex-col lg:flex-row gap-6">
           {/* Left - Test cards */}
           <div className="flex-1 space-y-5">
+            {/* Tabs - sliding pill like Analytics (placed inside left column so it only spans card area) */}
+            <div className="mb-4">
+              <div className="relative bg-gray-200 rounded-xl p-1 overflow-hidden max-w-full">
+                {(() => {
+                  const tabs = [
+                    { key: 'available', label: 'Available Tests' },
+                    { key: 'syllabus', label: 'Syllabus Coverage' },
+                  ];
+                  const activeIndex = Math.max(0, tabs.findIndex(t => t.key === activeTab));
+                  const sliderWidth = `${100 / tabs.length}%`;
+                  const sliderTransform = `translateX(${activeIndex * 100}%)`;
+                  return (
+                    <>
+                      <div
+                        aria-hidden
+                        className="absolute top-1 bottom-1 left-1 bg-white rounded-xl shadow-sm"
+                        style={{ width: sliderWidth, transform: sliderTransform, transition: 'transform 220ms cubic-bezier(.2,.8,.2,1)' }}
+                      />
+
+                      <div className="relative grid grid-cols-2" style={{ userSelect: 'none' }}>
+                        {tabs.map((t) => (
+                          <button
+                            key={t.key}
+                            role="tab"
+                            aria-pressed={activeTab === t.key}
+                            onClick={() => setActiveTab(t.key)}
+                            onMouseDown={(e) => e.preventDefault()}
+                            className={`z-10 py-1 px-4 sm:px-6 text-sm font-semibold select-none focus:outline-none ${activeTab === t.key ? 'text-gray-800' : 'text-gray-500'}`}
+                          >
+                            {t.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )
+                })()}
+              </div>
+            </div>
+
             {testData.map((test, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6"
+                className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6"
               >
                 {/* Header Row */}
-                <div className="flex items-center gap-2">
-                  <span className="text-[17px] font-semibold text-gray-900">
-                    {test.title}
-                  </span>
-                  <LevelBadge level={test.level} />
-                  <span className="ml-2 text-xs text-gray-400">
-                    {test.type}
-                  </span>
-                  <span className="ml-auto hidden md:inline text-[11px] text-gray-500">
-                    👥 {test.attempts} attempts
-                  </span>
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-lg md:text-2xl font-semibold text-gray-900 leading-tight">
+                        {test.title}
+                      </h3>
+                      <LevelBadge level={test.level} />
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block ml-2" aria-hidden />
+                    </div>
+                    <div className="text-sm text-gray-500 mt-1">{test.type}</div>
+                  </div>
                 </div>
 
                 {/* Tags */}
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div className="mt-3 flex flex-wrap gap-2 rounded-md">
                   {test.tags.map((tag, i) => (
                     <Tag key={i}>{tag}</Tag>
                   ))}
                 </div>
 
-                {/* Metrics */}
-                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-center text-sm">
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="text-[13px] text-gray-500">Questions</div>
-                    <div className="mt-0.5 font-semibold text-gray-900">
-                      {test.questions}
+                {/* Metrics - larger rounded boxes like screenshot */}
+                <div className="mt-6">
+                  <div className="flex items-center justify-center gap-4 flex-wrap">
+                    <div className="bg-gray-50 rounded-xl px-6 py-4 text-center min-w-[150px]">
+                      <div className="text-[12px] text-gray-500">Questions</div>
+                      <div className="mt-2 font-semibold text-gray-900">{test.questions}</div>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl px-6 py-4 text-center min-w-[150px]">
+                      <div className="text-[12px] text-gray-500">Duration</div>
+                      <div className="mt-2 font-semibold text-gray-900">{test.duration}</div>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl px-6 py-4 text-center min-w-[150px]">
+                      <div className="text-[12px] text-gray-500">Marks</div>
+                      <div className="mt-2 font-semibold text-gray-900">{test.marks}</div>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl px-6 py-4 text-center min-w-[150px]">
+                      <div className="text-[12px] text-gray-500">Avg Score</div>
+                      <div className="mt-2 font-semibold text-gray-900">{test.avgScore} %</div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="text-[13px] text-gray-500">Duration</div>
-                    <div className="mt-0.5 font-semibold text-gray-900">
-                      {test.duration}
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="text-[13px] text-gray-500">Marks</div>
-                    <div className="mt-0.5 font-semibold text-gray-900">
-                      {test.marks}
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="text-[13px] text-gray-500">Avg Score</div>
-                    <div className="mt-0.5 font-semibold text-gray-900">
-                      {test.avgScore} %
-                    </div>
-                  </div>
-                </div>
 
-                {/* Footer */}
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="md:hidden text-xs text-gray-500">
-                    👥 {test.attempts} attempts
-                  </span>
-                  <button
-                    className={`ml-auto px-4 py-2 rounded-md text-sm font-semibold text-white ${
-                      test.action.color === "blue"
-                        ? "bg-blue-600 hover:bg-blue-700"
-                        : test.action.color === "indigo"
-                        ? "bg-indigo-600 hover:bg-indigo-700"
-                        : "bg-gray-400"
-                    } ${
-                      test.action.disabled
-                        ? "opacity-60 cursor-not-allowed"
-                        : ""
-                    }`}
-                    disabled={test.action.disabled}
-                    onClick={
-                      test.action.label === "Start Quiz" &&
-                      !test.action.disabled
-                        ? handleStartQuiz
-                        : undefined
-                    }
-                  >
-                    {test.action.label}
-                  </button>
+                  <hr className="my-5 border-t border-gray-100" />
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-gray-500 flex items-center gap-2">
+                     <Users className="h-5 w-5"/> 
+                      <span>{test.attempts} attempts</span>
+                    </div>
+
+                    <button
+                      className={`ml-auto inline-flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold text-white shadow-sm ${
+                        test.action.color === "blue"
+                          ? "bg-gradient-to-r from-blue-600 to-purple-500 hover:from-blue-700 hover:to-purple-600"
+                          : test.action.color === "indigo"
+                          ? "bg-indigo-600 hover:bg-indigo-700"
+                          : "bg-gray-400"
+                      } ${test.action.disabled ? "opacity-60 cursor-not-allowed" : ""}`}
+                      disabled={test.action.disabled}
+                      onClick={
+                        test.action.label === "Start Quiz" && !test.action.disabled
+                          ? handleStartQuiz
+                          : undefined
+                      }
+                    >
+                      <Play className="h-4 w-4" />
+                      {test.action.label}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -271,44 +332,60 @@ export default function CompetativeExams() {
           {/* Right - Sidebar */}
           <aside className="w-full lg:w-[360px] lg:sticky lg:top-20 h-fit space-y-5">
             {/* Test Series Package */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <div className="text-sm text-gray-500">Test Series Package</div>
-              <div className="mt-1 text-3xl font-bold text-gray-900">
-                ₹2,999
+            <div
+              className="rounded-2xl border border-gray-100 shadow-xl p-6"
+              style={{ background: 'linear-gradient(135deg, #EFF6FF 0%, #FAF5FF 100%)' }}
+            >
+              <div className="flex items-start justify-between">
+                <div className="text-sm text-gray-500">Test Series Package</div>
               </div>
-              <div className="text-xs text-gray-500">One-time payment</div>
-              <ul className="mt-4 space-y-2 text-sm">
-                <li className="flex items-center gap-2 text-green-600">
-                  <span>✔</span>
-                  <span className="text-gray-700">Access to all 156 tests</span>
+
+              <div className="text-center my-4">
+                <div className="text-3xl md:text-4xl font-regular text-gray-900">₹2,999</div>
+                <div className="text-xs text-gray-500 mt-1">One-time payment</div>
+              </div>
+
+              <hr className="border-t border-gray-200 my-4" />
+
+              <ul className="mt-2 space-y-3 text-sm text-gray-700">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
+                  <span>Access to all 156 tests</span>
                 </li>
-                <li className="flex items-center gap-2 text-green-600">
-                  <span>✔</span>
-                  <span className="text-gray-700">
-                    Detailed performance analytics
-                  </span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
+                  <span>Detailed performance analytics</span>
                 </li>
-                <li className="flex items-center gap-2 text-green-600">
-                  <span>✔</span>
-                  <span className="text-gray-700">Expert video solutions</span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
+                  <span>Expert video solutions</span>
                 </li>
-                <li className="flex items-center gap-2 text-green-600">
-                  <span>✔</span>
-                  <span className="text-gray-700">
-                    All India Rank & comparison
-                  </span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
+                  <span>All India Rank & comparison</span>
                 </li>
-                <li className="flex items-center gap-2 text-green-600">
-                  <span>✔</span>
-                  <span className="text-gray-700">1 year validity</span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
+                  <span>1 year validity</span>
                 </li>
               </ul>
-              <button className="mt-5 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 rounded-lg">
-                Register to Enroll
-              </button>
-              <div className="mt-3 flex items-center justify-center gap-5 text-xs text-gray-500">
-                <button className="hover:text-gray-700">Share</button>
-                <button className="hover:text-gray-700">Brochure</button>
+
+              <div className="mt-6">
+                <button className="mx-auto block w-[90%] max-w-xs px-6 py-2 rounded-lg text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-md">
+                  Register to Enroll
+                </button>
+              </div>
+
+              <div className="mt-4 flex items-center justify-center gap-8 text-xs text-gray-500">
+                <button aria-label="Share" className="hover:text-gray-700 flex flex-row gap-2 items-center">
+                  <Share2 className="h-5 w-5 text-gray-400 mb-1" />
+                  <span>Share</span>
+                </button>
+
+                <button aria-label="Download Brochure" className="hover:text-gray-700 flex flex-row gap-2 items-center">
+                  <Download className="h-5 w-5 text-gray-400 mb-1" />
+                  <span>Brochure</span>
+                </button>
               </div>
             </div>
 
@@ -367,3 +444,5 @@ export default function CompetativeExams() {
     </div>
   );
 }
+
+export default CompetativeExams;

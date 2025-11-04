@@ -22,7 +22,7 @@ button {
    font-family: 'SF Pro Display', 'SF Pro Text', 'SF Pro Icons', 'Inter', 'Helvetica Neue', Arial, sans-serif;
 
   cursor: pointer;
-  transition: border-color 0.25s;
+  /* transition: border-color 0.25s; */
 }
 
 

@@ -1,6 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
-
+import { TriangleAlert } from "lucide-react";
 export default function SubmitTestModal({ open, onClose, onSubmit, answered, notAnswered, flagged }) {
   const navigate = useNavigate();
   if (!open) return null;
@@ -9,20 +9,20 @@ export default function SubmitTestModal({ open, onClose, onSubmit, answered, not
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-fade-in">
         <div className="text-lg font-semibold mb-4">Submit Test Confirmation</div>
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center gap-2 mb-4">
-          <svg width="22" height="22" fill="none" stroke="#fbbf24" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><circle cx="12" cy="16" r="1"/></svg>
+          <TriangleAlert className="text-black h-4 w-4 mb-3" />
           <span className="text-gray-700 text-sm">Once submitted, you cannot change your answers.<br/>Are you sure you want to submit?</span>
         </div>
         <div className="flex gap-3 mb-6">
           <div className="flex-1 bg-green-50 rounded-lg flex flex-col items-center py-3">
-            <span className="text-green-600 text-2xl font-bold">{answered}</span>
+            <span className="text-green-600 text-2xl font-semibold">{answered}</span>
             <span className="text-xs text-gray-600 mt-1">Answered</span>
           </div>
           <div className="flex-1 bg-gray-50 rounded-lg flex flex-col items-center py-3">
-            <span className="text-gray-700 text-2xl font-bold">{notAnswered}</span>
+            <span className="text-gray-700 text-2xl font-semibold">{notAnswered}</span>
             <span className="text-xs text-gray-600 mt-1">Not Answered</span>
           </div>
           <div className="flex-1 bg-yellow-50 rounded-lg flex flex-col items-center py-3">
-            <span className="text-yellow-500 text-2xl font-bold">{flagged}</span>
+            <span className="text-yellow-500 text-2xl font-semibold">{flagged}</span>
             <span className="text-xs text-gray-600 mt-1">Flagged</span>
           </div>
         </div>

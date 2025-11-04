@@ -156,16 +156,25 @@ export default function Quiz() {
                 <span className="text-sm">Save & Next</span>
               </button>
 
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg"
-                onClick={() => {
-                  if (current < questions.length - 1) setCurrent((c) => c + 1);
-                }}
-                disabled={current === questions.length - 1}
-              >
-                <span className="text-sm">Next</span>
-                <ChevronRight size={16} />
-              </button>
+              {current === questions.length - 1 ? (
+                <button
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg"
+                  onClick={() => setShowModal(true)}
+                >
+                  <span className="text-sm">Submit Test</span>
+                  <ChevronRight size={16} />
+                </button>
+              ) : (
+                <button
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg"
+                  onClick={() => {
+                    if (current < questions.length - 1) setCurrent((c) => c + 1);
+                  }}
+                >
+                  <span className="text-sm">Next</span>
+                  <ChevronRight size={16} />
+                </button>
+              )}
             </div>
           </div>
         </div>
