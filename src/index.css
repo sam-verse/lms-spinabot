@@ -21,7 +21,7 @@ button {
   font-weight: 500;
    font-family: 'SF Pro Display', 'SF Pro Text', 'SF Pro Icons', 'Inter', 'Helvetica Neue', Arial, sans-serif;
 
-  cursor: pointer;
+  /* cursor: pointer; */
   /* transition: border-color 0.25s; */
 }
 

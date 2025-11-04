@@ -188,8 +188,8 @@ export default function Analytics() {
               const tabs = [
                 { key: "overview", label: "Overview" },
                 { key: "history", label: "Test History" },
-                { key: "subject", label: "Subject Analysis" },
-                { key: "peer", label: "Peer Comparison" },
+                { key: "peer", label: "Subject Analysis" },
+                { key: "subject", label: "Peer Comparison" },
               ];
               const activeIndex = Math.max(0, tabs.findIndex((t) => t.key === activeTab));
               const sliderWidth = `${100 / tabs.length}%`;
