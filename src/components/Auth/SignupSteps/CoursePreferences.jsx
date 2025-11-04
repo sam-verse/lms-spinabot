@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CustomSelect from '../../Forms/CustomSelect';
 
 const CoursePreferences = ({ formData, onUpdate, onNext, onBack, onSwitchToLogin }) => {
   const [localData, setLocalData] = useState({
@@ -66,39 +67,37 @@ const CoursePreferences = ({ formData, onUpdate, onNext, onBack, onSwitchToLogin
         {/* Course Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Course of interest</label>
-          <select
+          <CustomSelect
             name="courseCategory"
             value={localData.courseCategory}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white text-gray-700"
+            placeholder="Select your course category"
           >
-            <option value="">Select your course category</option>
             {courseCategories.map((category) => (
               <option key={category.value} value={category.value}>
                 {category.label}
               </option>
             ))}
-          </select>
+          </CustomSelect>
         </div>
 
         {/* College */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">College</label>
-          <select
+          <CustomSelect
             name="college"
             value={localData.college}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white text-gray-700"
+            placeholder="Select your college"
           >
-            <option value="">Select your college</option>
             {colleges.map((college) => (
               <option key={college.value} value={college.value}>
                 {college.label}
               </option>
             ))}
-          </select>
+          </CustomSelect>
         </div>
 
         {/* Password */}

@@ -133,7 +133,7 @@ const LoginForm = ({ onSuccess, onSwitchToSignup }) => {
           {isLoading ? (
             <>
               <Loader className="w-4 h-4 animate-spin" />
-              Signing in...
+              Loging in...
             </>
           ) : (
             'Login'

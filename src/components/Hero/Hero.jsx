@@ -1,7 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Users, TrendingUp, Clock, Trophy, Lightbulb } from 'lucide-react';
 
 const Hero = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  // gifPath will be the first available GIF path or null
+  const [gifPath, setGifPath] = useState(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('user');
+      setLoggedIn(!!raw);
+    } catch (e) {
+      setLoggedIn(false);
+    }
+
+    // probe whether a landing GIF exists & is loadable; try common filenames and pick the first that loads
+    try {
+      const candidates = ['/heropage.gif', '/homepage.gif', '/home-hero.gif'];
+      let found = false;
+      candidates.forEach((candidate) => {
+        if (found) return;
+        const img = new Image();
+        img.src = candidate;
+        img.onload = () => {
+          if (!found) {
+            found = true;
+            setGifPath(candidate);
+          }
+        };
+        img.onerror = () => {
+          // no-op for this candidate
+        };
+      });
+      // if none load after a short timeout, leave gifPath as null (fallback will be used)
+      setTimeout(() => {
+        if (!found) setGifPath(null);
+      }, 800);
+    } catch (err) {
+      setGifPath(null);
+    }
+
+    const onStorage = (e) => {
+      if (e.key === 'user') {
+        setLoggedIn(!!e.newValue);
+      }
+    };
+
+    const onUserChange = (e) => {
+      // custom event dispatched by Header when user logs in/out
+      try {
+        setLoggedIn(!!e?.detail);
+      } catch (err) {
+        setLoggedIn(false);
+      }
+    };
+
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('user-change', onUserChange);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('user-change', onUserChange);
+    };
+  }, []);
   return (
     <section className="bg-white px-6 py-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -64,9 +124,9 @@ const Hero = () => {
         <div className="flex justify-center">
           <div className="relative">
             <div className="w-100 h-100 rounded-lg overflow-hidden">
-              <img 
-                src="/hero-img.png" 
-                alt="Student learning illustration"
+              <img
+                src={loggedIn ? '/hero-img.png' : (gifPath ? gifPath : '/hero-img.png')}
+                alt={loggedIn ? 'Student learning illustration' : 'Landing hero animation'}
                 className="w-full h-full object-cover"
               />
              

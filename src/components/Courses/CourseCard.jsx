@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Clock, Layers, Users } from 'lucide-react';
 
 const CourseCard = ({
@@ -21,6 +22,7 @@ const CourseCard = ({
   tests = 25,
   listMode = false,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[480px] w-full border border-gray-100" style={{boxShadow:'0 4px 24px 0 rgba(31,38,135,0.08)'}}>
       {/* Course image with overlayed badges */}
@@ -114,7 +116,13 @@ const CourseCard = ({
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-regular text-sm shadow hover:opacity-90 transition">View Details</button>
+            <button
+              type="button"
+              onClick={() => navigate('/test-completed')}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-regular text-sm shadow hover:opacity-90 transition"
+            >
+              View Details
+            </button>
             <button className="bg-white border border-gray-300 text-gray-900 px-6 py-2 rounded-lg font-regular text-sm shadow hover:bg-gray-50 transition">Enroll Now</button>
           </div>
         </div>

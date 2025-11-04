@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Award, BookOpen, Clock, Play, Users, CheckCircle, Share2, Download } from 'lucide-react'
 import Header from "../components/Header/Header";
+import Footer from "../components/Footer/Footer";
+import CustomSelect from '../components/Forms/CustomSelect';
 
 const testData = [
   {
@@ -95,30 +97,14 @@ function LevelBadge({ level }) {
   );
 }
 
-function SelectField({ children, id }) {
+function SelectField({ children, id, placeholder }) {
+  // Preserve the original gray select styling used previously on this page
+  const graySelectClass = 'w-full bg-gray-100 border border-gray-100 rounded-lg px-4 py-1 text-sm text-gray-700 appearance-none pr-10 shadow-sm';
   return (
-    <div className="relative">
-      <select
-        id={id}
-        className="w-full bg-gray-100 border border-gray-100 rounded-lg px-4 py-1 text-sm text-gray-700 appearance-none pr-10 shadow-sm"
-      >
-        {children}
-      </select>
-      <svg
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
-    </div>
-  )
+    <CustomSelect id={id} placeholder={placeholder} selectClassName={graySelectClass}>
+      {children}
+    </CustomSelect>
+  );
 }
 
 function TabButton({ label, activeClassName = "text-gray-800", inactiveClassName = "text-gray-500", right = false }) {
@@ -137,11 +123,43 @@ function CompetativeExams() {
   const navigate = useNavigate();
   const handleStartQuiz = () => navigate("/quiz");
   const [activeTab, setActiveTab] = useState('available');
+  const sidebarRef = useRef(null);
+  const [enableSticky, setEnableSticky] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    const checkSticky = () => {
+      const headerEl = document.querySelector('header');
+      const hh = headerEl ? Math.ceil(headerEl.getBoundingClientRect().height) : 0;
+      setHeaderHeight(hh);
+
+      const sidebarEl = sidebarRef.current;
+      if (!sidebarEl) return;
+
+      const sidebarH = Math.ceil(sidebarEl.getBoundingClientRect().height);
+      const avail = window.innerHeight - hh;
+
+      // enable sticky only when sidebar height fits in available viewport space
+      setEnableSticky(sidebarH <= avail && window.innerWidth >= 1024);
+    };
+
+    // run initially and on resize/orientation change
+    checkSticky();
+    window.addEventListener('resize', checkSticky);
+    window.addEventListener('orientationchange', checkSticky);
+    // also recalc after images/fonts load
+    window.addEventListener('load', checkSticky);
+    return () => {
+      window.removeEventListener('resize', checkSticky);
+      window.removeEventListener('orientationchange', checkSticky);
+      window.removeEventListener('load', checkSticky);
+    };
+  }, []);
   return (
-    <div className="bg-[#F6F7FB] min-h-screen pb-10">
+    <div className="bg-[#F6F7FB] min-h-screen">
       <Header />
 
-      <div className="max-w-7xl mx-auto mt-8 px-4 md:px-6">
+  <div className="max-w-7xl mx-auto mt-8 px-4 md:px-6 mb-12 lg:mb-20">
         {/* Page Title */}
         <div>
           <h1 className="text-[22px] md:text-3xl font-bold text-gray-900">
@@ -330,7 +348,11 @@ function CompetativeExams() {
           </div>
 
           {/* Right - Sidebar */}
-          <aside className="w-full lg:w-[360px] lg:sticky lg:top-20 h-fit space-y-5">
+          <aside
+            ref={sidebarRef}
+            className={`w-full lg:w-[360px] ${enableSticky ? 'lg:sticky' : ''} h-fit space-y-5`}
+            style={enableSticky ? { top: headerHeight } : undefined}
+          >
             {/* Test Series Package */}
             <div
               className="rounded-2xl border border-gray-100 shadow-xl p-6"
@@ -441,6 +463,7 @@ function CompetativeExams() {
           </aside>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

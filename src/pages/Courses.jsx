@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import CourseCard from '../components/Courses/CourseCard';
+import CustomSelect from '../components/Forms/CustomSelect';
 
 
 // Dummy data for demonstration
@@ -37,24 +38,23 @@ const Courses = () => {
         <p className="text-gray-500 mb-6">Discover the perfect course to achieve your career goals.</p>
         {/* Filters */}
         <div className="bg-white rounded-xl shadow flex flex-wrap gap-2 md:gap-4 items-center px-4 py-4 mb-6">
-          <input type="text" placeholder="Search Courses..." className="border border-gray-200 rounded px-3 py-2 w-48 text-sm" />
-          <select className="border border-gray-200 rounded px-3 py-2 text-sm">
+          <input type="text" placeholder="Search Courses..." className="border border-gray-200 rounded px-3 py-2 w-48 text-sm" />          <CustomSelect className="">
             <option>Category</option>
             <option>UPSC</option>
             <option>SSC</option>
-          </select>
-          <select className="border border-gray-200 rounded px-3 py-2 text-sm">
+          </CustomSelect>
+          <CustomSelect className="">
             <option>Level</option>
             <option>Beginner</option>
             <option>Advanced</option>
             <option>All Levels</option>
-          </select>
-          <select className="border border-gray-200 rounded px-3 py-2 text-sm">
+          </CustomSelect>
+          <CustomSelect className="">
             <option>Sort by</option>
             <option>Featured</option>
             <option>Price: Low to High</option>
             <option>Price: High to Low</option>
-          </select>
+          </CustomSelect>
           <div className="ml-auto flex gap-2">
             <button
               className={`px-3 py-1 rounded text-xs font-semibold ${viewMode === 'grid' ? 'bg-black text-white' : 'bg-gray-200 text-black'}`}

@@ -170,7 +170,7 @@ export default function Analytics() {
             <div key={s.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
               <div>
                 <div className="text-xs text-gray-500 mb-1">{s.title}</div>
-                <div className={`text-2xl font-bold ${s.valueClass}`}>{s.value}</div>
+                <div className={`text-2xl font-regular `}>{s.value}</div>
                 {s.forceSign ? <Change text={s.change} forceSign={s.forceSign} /> : <Change text={s.change} />}
               </div>
               <div className={`ml-0 md:ml-4 flex items-center justify-center w-10 h-10 rounded-lg self-end md:self-center`}>
@@ -198,7 +198,7 @@ export default function Analytics() {
                 <>
                   <div
                     aria-hidden
-                    className="absolute top-1 bottom-1 left-0 bg-white rounded-full shadow-sm"
+                    className="absolute top-1 bottom-1 left-1  bg-white rounded-full shadow-sm"
                     style={{ width: sliderWidth, transform: sliderTransform, transition: "transform 220ms cubic-bezier(.2,.8,.2,1)" }}
                   />
 

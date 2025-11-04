@@ -129,7 +129,7 @@ export default function Quiz() {
           </div>
           <div className="flex items-center gap-3 mt-4">
             <button
-              className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 text-gray-600 bg-white shadow-sm disabled:opacity-50"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-gray-600 bg-white shadow-sm disabled:opacity-50"
               onClick={handlePrev}
               disabled={current === 0}
             >
@@ -138,7 +138,7 @@ export default function Quiz() {
             </button>
 
             <button
-              className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 text-gray-600 bg-white shadow-sm"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-gray-600 bg-white shadow-sm"
               onClick={handleClear}
             >
               <RefreshCw size={16} />
@@ -147,7 +147,7 @@ export default function Quiz() {
 
             <div className="ml-auto flex items-center gap-3">
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-gray-700 shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 shadow-sm"
                 onClick={() => {
                   if (current < questions.length - 1) setCurrent(current + 1);
                 }}
@@ -158,7 +158,7 @@ export default function Quiz() {
 
               {current === questions.length - 1 ? (
                 <button
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg shadow-lg"
                   onClick={() => setShowModal(true)}
                 >
                   <span className="text-sm">Submit Test</span>
