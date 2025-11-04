@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Clock, Check, Link,CircleCheckBig 
+import { FileText, Clock, Check, Link,CircleCheckBig, TrendingUp, Target 
 
  } from 'lucide-react';
 
@@ -81,13 +81,13 @@ const TestSeries = () => {
               <div className="flex items-center justify-start gap-8 mb-4">
                 <div className="flex items-center gap-2">
                   {/* <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100"> */}
-                    <img src="/target.svg" alt="Target" className="w-4 h-4" />
+                    <Target className="w-4 h-4 text-orange-500" />
                   {/* </span> */}
                   <span className="text-base font-semibold text-black">{test.tests}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {/* <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100"> */}
-                    <img src="/clock.svg" alt="clock" className="w-4 h-4" />
+                    <Clock className="w-4 h-4 text-orange-500" />
                   {/* </span> */}
                   <span className="text-base font-semibold text-black">{test.duration}</span>
                 </div>
@@ -118,7 +118,7 @@ const TestSeries = () => {
         
         <div className="text-center mt-12">
           <button className="bg-white border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:border-gray-400 transition-colors flex items-center gap-2 mx-auto">
-            <img src="/up-arrow.svg" alt="Growth" />
+            <TrendingUp className="w-7 h-7" />
             View All Test Series
           </button>
         </div>

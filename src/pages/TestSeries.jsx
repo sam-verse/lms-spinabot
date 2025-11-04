@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import { CheckCircle, GraduationCap, BookOpen, Users, Clock, ChevronRight, Trophy } from 'lucide-react';
+import { CheckCircle, GraduationCap, BookOpen, Users, Clock, ChevronRight, Trophy, ChartColumn,Target } from 'lucide-react';
 
 const examCategories = [
   {
@@ -126,7 +126,7 @@ function TestSeries() {
             <Trophy className="inline-block mr-2" />
             Start Practicing</button>
           <button className="bg-black text-white font-semibold px-6 py-2 rounded-md shadow hover:bg-gray-900 transition">
-            <img src="/graph.svg" alt="graph" className="inline-block mr-2" />
+            <ChartColumn className="inline-block mr-2" />
             View Analytics</button>
         </div>
       </section>
@@ -205,11 +205,11 @@ function TestSeries() {
               <p className="text-gray-600 text-sm mb-4 leading-relaxed">{test.desc}</p>
               <div className="flex items-center justify-start gap-8 mb-4">
                 <div className="flex items-center gap-2">
-                  <img src="/target.svg" alt="Target" className="w-4 h-4" />
+                  <Target className="w-4 h-4 text-orange-500" />
                   <span className="text-base font-semibold text-black">{test.tests}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <img src="/clock.svg" alt="clock" className="w-4 h-4" />
+                  <Clock className="w-4 h-4 text-orange-500" />
                   <span className="text-base font-semibold text-black">{test.duration}</span>
                 </div>
               </div>
