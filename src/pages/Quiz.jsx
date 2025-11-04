@@ -57,8 +57,8 @@ export default function Quiz() {
     <div className="bg-[#fafbfc] min-h-screen">
       <Header />
       {/* Test Title */}
-      <div className="bg-white border-b px-8 py-3 flex items-center gap-4 justify-between">
-        <div className="flex items-center gap-4">
+  <div className="bg-white border-b px-4 md:px-8 py-3 flex items-center gap-4 justify-between flex-wrap">
+  <div className="flex items-center gap-4 flex-wrap">
           <span className="text-xl font-semibold">UPSC Prelims Mock Test</span>
           <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded text-xs">General Studies</span>
         </div>
@@ -88,7 +88,7 @@ export default function Quiz() {
               </button>
             </div>
             <div className="mt-3">
-              <div className="w-56 relative">
+              <div className="w-40 md:w-56 relative">
                 <div className="h-2 bg-[#e6e6e6] rounded" />
                 <div
                   className="absolute top-0 left-0 h-2 bg-[#0f1724] rounded transition-all"
@@ -108,13 +108,13 @@ export default function Quiz() {
               </div>
             </div>
           </div>
-          <div className="p-8">
-          <div className="text-lg font-semibold mb-6">{questions[current].question}</div>
+          <div className="px-4 py-6 md:p-8">
+          <div className="text-lg font-semibold mb-4 md:mb-6">{questions[current].question}</div>
           <div className="space-y-4 mb-8">
             {questions[current].options.map((opt, idx) => (
               <label
                 key={idx}
-                className={`flex items-center px-6 py-4 rounded-lg border cursor-pointer transition-all ${answers[current] === idx ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'}`}
+                className={`flex items-center px-4 py-3 md:px-6 md:py-4 rounded-lg border cursor-pointer transition-all ${answers[current] === idx ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'}`}
               >
                   <input
                     type="radio"
@@ -127,27 +127,30 @@ export default function Quiz() {
               </label>
             ))}
           </div>
-          <div className="flex items-center gap-3 mt-4">
-            <button
-              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-gray-600 bg-white shadow-sm disabled:opacity-50"
-              onClick={handlePrev}
-              disabled={current === 0}
-            >
-              <ChevronLeft size={16} />
-              <span className="text-sm">Previous</span>
-            </button>
-
-            <button
-              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-gray-600 bg-white shadow-sm"
-              onClick={handleClear}
-            >
-              <RefreshCw size={16} />
-              <span className="text-sm">Clear Response</span>
-            </button>
-
-            <div className="ml-auto flex items-center gap-3">
+          <div className="flex flex-col md:flex-row items-center gap-3 mt-4">
+            {/* On mobile: prev and clear share a row with space-between. On md+: they'll sit together on the left */}
+            <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-3">
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 shadow-sm"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-gray-600 bg-white shadow-sm disabled:opacity-50"
+                onClick={handlePrev}
+                disabled={current === 0}
+              >
+                <ChevronLeft size={16} />
+                <span className="text-sm">Previous</span>
+              </button>
+
+              <button
+                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-gray-600 bg-white shadow-sm"
+                onClick={handleClear}
+              >
+                <RefreshCw size={16} />
+                <span className="text-sm">Clear Response</span>
+              </button>
+            </div>
+
+            <div className="mt-3 md:mt-0 md:ml-auto flex items-center gap-3 w-full md:w-auto">
+              <button
+                className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 bg-white border border-gray-200 rounded-lg text-gray-700 shadow-sm w-full md:w-auto justify-center"
                 onClick={() => {
                   if (current < questions.length - 1) setCurrent(current + 1);
                 }}
@@ -158,7 +161,7 @@ export default function Quiz() {
 
               {current === questions.length - 1 ? (
                 <button
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-lg shadow-lg w-full md:w-auto justify-center"
                   onClick={() => setShowModal(true)}
                 >
                   <span className="text-sm">Submit Test</span>
@@ -166,7 +169,7 @@ export default function Quiz() {
                 </button>
               ) : (
                 <button
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg w-full md:w-auto justify-center"
                   onClick={() => {
                     if (current < questions.length - 1) setCurrent((c) => c + 1);
                   }}
@@ -195,7 +198,8 @@ export default function Quiz() {
                     <div className="text-gray-500">Not Answered: <span className="font-bold">{answers.filter((a) => a === null).length}</span></div>
                   </div>
                   <div className="space-y-2 text-right">
-                    <div className="text-gray-500">Flagged: <span className="font-bold text-yellow-500">{flagged.length}</span></div>
+                    <div
+                     className="text-gray-500">Flagged: <span className="font-bold text-yellow-500">{flagged.length}</span></div>
                     <div className="text-gray-500">Total: <span className="font-bold">{questions.length}</span></div>
                   </div>
                 </div>
@@ -203,14 +207,14 @@ export default function Quiz() {
             </div>
             {/* Number grid */}
             <div className="px-6 py-3 border-b border-gray-200">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 {questions.map((_, idx) => {
                   const isAnswered = answers[idx] !== null;
                   const isFlagged = flagged.includes(idx);
                   const isCurrent = idx === current;
                   const base = "w-10 h-10 flex items-center justify-center rounded-md border text-sm font-medium";
                   const classes = isCurrent ? `${base} bg-blue-500 border-blue-500 text-white` : isFlagged ? `${base} bg-yellow-400 border-yellow-400 text-white` : isAnswered ? `${base} bg-green-500 border-green-500 text-white` : `${base} bg-white border-gray-300 text-gray-700`;
-                  return (
+                    return (
                     <button key={idx} className={classes} onClick={() => handleNav(idx)}>
                       {idx + 1}
                     </button>

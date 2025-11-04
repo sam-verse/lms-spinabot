@@ -106,7 +106,8 @@ const Header = () => {
         </div>
         {/* User avatar right */}
         {user ? (
-          <div className="flex items-center ml-4">
+          // Hide avatar on small screens; show on md and larger
+          <div className="hidden md:flex items-center ml-4">
               <div className="flex items-center ml-4">
                 {/* use shared Dropdown component for user menu */}
                 {/* eslint-disable-next-line */}
