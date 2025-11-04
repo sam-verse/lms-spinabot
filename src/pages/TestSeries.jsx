@@ -2,8 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import { CheckCircle, GraduationCap, BookOpen, Users, Clock } from 'lucide-react';
-import { default as LucideTrophy } from 'lucide-react/dist/esm/icons/trophy';
+import { CheckCircle, GraduationCap, BookOpen, Users, Clock, ChevronRight, Trophy } from 'lucide-react';
 
 const examCategories = [
   {
@@ -124,7 +123,7 @@ function TestSeries() {
         <p className="max-w-2xl mx-auto text-lg mb-6">Practice with India's most comprehensive test series platform. Get detailed analytics, expert solutions, and compete with thousands of aspirants.</p>
         <div className="flex justify-center gap-4 mb-2">
           <button className="bg-white text-blue-700 font-semibold px-5 py-2 rounded-md shadow hover:bg-blue-50 transition">
-            <LucideTrophy className="inline-block mr-2" />
+            <Trophy className="inline-block mr-2" />
             Start Practicing</button>
           <button className="bg-black text-white font-semibold px-6 py-2 rounded-md shadow hover:bg-gray-900 transition">
             <img src="/graph.svg" alt="graph" className="inline-block mr-2" />
@@ -161,7 +160,8 @@ function TestSeries() {
                   className={`w-full py-3 mt-2 rounded-lg font-semibold text-white text-lg ${cat.btn} hover:opacity-90 transition flex items-center justify-center gap-2`}
                   onClick={handleExplore}
                 >
-                  Explore Tests <span className="text-xl">&rarr;</span>
+                  Explore Tests
+                  <ChevronRight className="w-6 h-6 text-white" />
                 </button>
               </div>
             ))}

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import Header from "../components/Header/Header";
 import TestHistoryTable from "../components/TestHistoryTable";
-import { Line, Bar } from "react-chartjs-2";
+import PercentileChart from "../components/Charts/PercentileChart";
+import PerformanceChart from "../components/Charts/PerformanceChart";
 import Subject from "../components/Subject";
 import PeerComparison from "../components/PeerComparison";
+import Footer from "../components/Footer/Footer";
+import { TrendingUp, TrendingDown, AlertCircle, CheckCircle } from "lucide-react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,6 +32,64 @@ ChartJS.register(
 
 export default function Analytics() {
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Small helper to render change with lucide icon based on + or -
+  // iconColor controls icon; textClass controls the change text color (so we can keep orange/green text separately)
+  const Change = ({ text, textClass, iconPositive = "text-green-600", iconNegative = "text-red-500", forceSign } = {}) => {
+    // forceSign: 'positive' | 'negative' | undefined
+    if (!text || typeof text !== "string") return null;
+    const trimmed = text.trim();
+    const isPlus = forceSign === "positive" ? true : forceSign === "negative" ? false : trimmed.startsWith("+");
+    const isMinus = forceSign === "negative" ? true : forceSign === "positive" ? false : trimmed.startsWith("-");
+    const Icon = isPlus ? TrendingUp : isMinus ? TrendingDown : null;
+    const iconClass = isPlus ? iconPositive : isMinus ? iconNegative : "text-gray-500";
+    // if caller didn't provide a textClass, use the iconClass so text color matches icon
+    const finalTextClass = textClass ? textClass : iconClass;
+    return (
+      <div className={`text-xs ${finalTextClass} mt-1 flex items-center gap-1`}>
+        {Icon && <Icon size={12} className={`${iconClass}`} />}
+        <span>{trimmed}</span>
+      </div>
+    );
+  };
+
+  // KPI stats data - central source of truth for stat cards
+  const stats = [
+    { id: "tests", title: "Tests Taken", value: "5", change: "+2 this month", iconType: "doc", iconBg: "bg-blue-50", valueClass: "text-blue-600" },
+    { id: "avgScore", title: "Avg. Score", value: "81%", change: "+11% improvement", iconType: "score", iconBg: "bg-green-50", valueClass: "text-green-600" },
+    { id: "avgRank", title: "Avg. Rank", value: "#678", change: "Top 7%", iconType: "rank", iconBg: "bg-purple-50", valueClass: "text-purple-600", forceSign: "positive" },
+    { id: "percentile", title: "Percentile", value: "92%", change: "+15% growth", iconType: "bars", iconBg: "bg-orange-50", valueClass: "text-orange-500" },
+  ];
+
+  const renderIcon = (type, valueClass) => {
+    // use currentColor in SVG so Tailwind classes like text-<color> control color
+    switch (type) {
+      // prefer using external analytics SVG files (placed in public/analytics)
+      case "doc":
+        return <img src="/analytics/analytics1.svg" alt="analytics-1" className="h-5 w-5 md:h-6 md:w-6" />;
+      case "score":
+        return <img src="/analytics/analytics2.svg" alt="analytics-2" className="h-5 w-5 md:h-6 md:w-6" />;
+      case "rank":
+        return <img src="/analytics/analytics3.svg" alt="analytics-3" className="h-5 w-5 md:h-6 md:w-6" />;
+      case "bars":
+        return <img src="/analytics/analytics4.svg" alt="analytics-4" className="h-5 w-5 md:h-6 md:w-6" />;
+      default:
+        return null;
+    }
+  };
+  // Topics data for focus and strengths
+  const focusTopics = [
+    { title: 'Indian Economy - Banking Sector', percent: 48, attempts: 12, note: 'Focus on RBI monetary policy' },
+    { title: 'Modern History - World Wars', percent: 52, attempts: 8, note: 'Review causes and consequences' },
+    { title: 'Geography - Climate Zones', percent: 58, attempts: 15, note: 'Practice more map-based questions' },
+    { title: 'Polity - Constitutional Amendments', percent: 62, attempts: 10, note: 'Memorize key amendment numbers' },
+  ];
+
+  const strengths = [
+    { title: 'Ancient Indian History', percent: 92, attempts: 18 },
+    { title: 'Indian Polity - Fundamental Rights', percent: 88, attempts: 22 },
+    { title: 'Geography - Rivers and Mountains', percent: 85, attempts: 20 },
+  ];
   // Line chart data for Performance Trend
   const lineData = {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
@@ -95,56 +156,7 @@ export default function Analytics() {
     },
   };
 
-  // Bar chart data for Percentile Progress
-  const barData = {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
-    datasets: [
-      {
-        label: "Percentile",
-        data: [65, 70, 75, 85, 90, 97],
-        backgroundColor: "#a78bfa",
-        borderRadius: 6,
-        barPercentage: 0.6,
-        categoryPercentage: 0.6,
-      },
-    ],
-  };
-  const barOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: "bottom",
-        labels: {
-          usePointStyle: true,
-          color: "#a78bfa",
-          font: { size: 14 },
-          padding: 24,
-        },
-      },
-      title: { display: false },
-      tooltip: {
-        enabled: true,
-        backgroundColor: "#fff",
-        titleColor: "#a78bfa",
-        bodyColor: "#a78bfa",
-        borderColor: "#a78bfa",
-        borderWidth: 1,
-      },
-    },
-    scales: {
-      x: {
-        grid: { color: "#e5e7eb" },
-        ticks: { color: "#6b7280" },
-      },
-      y: {
-        grid: { color: "#e5e7eb" },
-        min: 0,
-        max: 100,
-        ticks: { stepSize: 25, color: "#6b7280" },
-      },
-    },
-  };
+  // Bar chart data for Percentile Progress is now rendered by `PercentileChart` component
   return (
     <div className="min-h-screen bg-[#f8f9fb]">
       <Header />
@@ -153,164 +165,146 @@ export default function Analytics() {
       <div className="max-w-6xl mx-auto mt-8 px-4">
         <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">Test Performance Dashboard</div>
         <div className="text-gray-600 mb-6">Track your progress and analyze your performance</div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col items-center">
-            <div className="text-xs text-gray-500 mb-1">Tests Taken</div>
-            <div className="text-2xl font-bold text-blue-600">5</div>
-            <div className="text-xs text-green-600 mt-1">+2 this month</div>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col items-center">
-            <div className="text-xs text-gray-500 mb-1">Avg. Score</div>
-            <div className="text-2xl font-bold text-green-600">81%</div>
-            <div className="text-xs text-green-600 mt-1">+11% improvement</div>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col items-center">
-            <div className="text-xs text-gray-500 mb-1">Avg. Rank</div>
-            <div className="text-2xl font-bold text-purple-600">#678</div>
-            <div className="text-xs text-purple-600 mt-1">Top 7%</div>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col items-center">
-            <div className="text-xs text-gray-500 mb-1">Percentile</div>
-            <div className="text-2xl font-bold text-orange-500">92%</div>
-            <div className="text-xs text-orange-500 mt-1">+15% growth</div>
-          </div>
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          {stats.map((s) => (
+            <div key={s.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+              <div>
+                <div className="text-xs text-gray-500 mb-1">{s.title}</div>
+                <div className={`text-2xl font-bold ${s.valueClass}`}>{s.value}</div>
+                {s.forceSign ? <Change text={s.change} forceSign={s.forceSign} /> : <Change text={s.change} />}
+              </div>
+              <div className={`ml-0 md:ml-4 flex items-center justify-center w-10 h-10 rounded-lg self-end md:self-center`}>
+                {renderIcon(s.iconType, s.valueClass)}
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6">
-          <button
-            className={`px-6 py-2 rounded-full font-semibold shadow-sm ${activeTab === "overview" ? "bg-gray-100 text-gray-800" : "bg-white text-gray-500 border"}`}
-            onClick={() => setActiveTab("overview")}
-          >
-            Overview
-          </button>
-          <button
-            className={`px-6 py-2 rounded-full font-semibold shadow-sm ${activeTab === "history" ? "bg-gray-100 text-gray-800" : "bg-white text-gray-500 border"}`}
-            onClick={() => setActiveTab("history")}
-          >
-            Test History
-          </button>
-          <button
-            className="bg-white text-gray-500 px-6 py-2 rounded-full font-semibold shadow-sm border"
-            onClick={() => setActiveTab("subject")}
-          >
-            Subject Analysis
-          </button>
-          <button
-            className="bg-white text-gray-500 px-6 py-2 rounded-full font-semibold shadow-sm border"
-            onClick={() => setActiveTab("peer")}
-          >
-            Peer Comparison
-          </button>
+        {/* Tabs - sliding pill */}
+        <div className="mb-6">
+          <div className="relative bg-gray-100 rounded-full p-1 overflow-hidden">
+            {/* slider background */}
+            {(() => {
+              const tabs = [
+                { key: "overview", label: "Overview" },
+                { key: "history", label: "Test History" },
+                { key: "subject", label: "Subject Analysis" },
+                { key: "peer", label: "Peer Comparison" },
+              ];
+              const activeIndex = Math.max(0, tabs.findIndex((t) => t.key === activeTab));
+              const sliderWidth = `${100 / tabs.length}%`;
+              const sliderTransform = `translateX(${activeIndex * 100}%)`;
+              return (
+                <>
+                  <div
+                    aria-hidden
+                    className="absolute top-1 bottom-1 left-0 bg-white rounded-full shadow-sm"
+                    style={{ width: sliderWidth, transform: sliderTransform, transition: "transform 220ms cubic-bezier(.2,.8,.2,1)" }}
+                  />
+
+                  <div className="relative grid grid-cols-4" style={{ userSelect: "none", WebkitUserSelect: "none", MozUserSelect: "none" }}>
+                    {tabs.map((t) => (
+                      <button
+                        key={t.key}
+                        role="tab"
+                        aria-pressed={activeTab === t.key}
+                        onClick={() => setActiveTab(t.key)}
+                        // Prevent text selection on mouse down and remove mobile tap highlight
+                        onMouseDown={(e) => e.preventDefault()}
+                        // allow keyboard activation via Enter/Space when mouse down is prevented
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setActiveTab(t.key);
+                          }
+                        }}
+                        className={`z-10 py-2 px-3 sm:px-6 text-sm font-semibold select-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${activeTab === t.key ? "text-gray-800" : "text-gray-500"}`}
+                        style={{ WebkitTapHighlightColor: "transparent" }}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         </div>
 
         {/* Tab Content */}
         {activeTab === "overview" && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div className="font-semibold text-gray-800 mb-2">Performance Trend</div>
-                <div className="text-xs text-gray-500 mb-2">Your score progression over time</div>
-                <div className="bg-gray-50 rounded-lg h-40 flex items-center justify-center">
-                  <Line data={lineData} options={lineOptions} />
-                </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-2">
-                  <span>Week 1</span>
-                  <span>Week 2</span>
-                  <span>Week 3</span>
-                  <span>Week 4</span>
-                  <span>Week 5</span>
-                  <span>Week 6</span>
-                </div>
-                <div className="flex gap-6 justify-center text-xs mt-1">
-                  <span className="flex items-center gap-1 text-gray-400"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#a3a3a3" strokeWidth="2" fill="none"/><line x1="2" y1="8" x2="14" y2="8" stroke="#a3a3a3" strokeWidth="2" strokeDasharray="4 2"/></svg> Average Score</span>
-                  <span className="flex items-center gap-1 text-blue-600"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#2563eb" strokeWidth="2" fill="#2563eb"/></svg> Your Score</span>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div className="font-semibold text-gray-800 mb-2">Percentile Progress</div>
-                <div className="text-xs text-gray-500 mb-2">Your percentile rank over time</div>
-                <div className="bg-gray-50 rounded-lg h-40 flex items-center justify-center">
-                  <Bar data={barData} options={barOptions} />
-                </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-2">
-                  <span>Week 1</span>
-                  <span>Week 2</span>
-                  <span>Week 3</span>
-                  <span>Week 4</span>
-                  <span>Week 5</span>
-                  <span>Week 6</span>
-                </div>
-                <div className="flex gap-6 justify-center text-xs mt-1">
-                  <span className="flex items-center gap-1 text-purple-400"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="3" width="10" height="10" rx="2" fill="#a78bfa"/></svg> Percentile</span>
-                </div>
-              </div>
+              <PerformanceChart />
+                <PercentileChart />
             </div>
             {/* Focus & Strength Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div className="font-semibold text-gray-800 mb-2 flex items-center gap-2">Topics to Focus On <span className="text-orange-500">&#9888;</span></div>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Indian Economy: Banking Sector</span>
-                      <span className="text-orange-500 font-bold">48%</span>
+              {/* Topics to Focus On - left */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <div className="font-semibold text-gray-800">Topics to Focus On</div>
+                      <div className="text-sm text-gray-500">Areas needing improvement</div>
                     </div>
-                    <div className="bg-gray-200 rounded h-2 w-full"><div className="bg-orange-400 h-2 rounded" style={{width:'48%'}}></div></div>
-                    <div className="text-xs text-gray-500 mt-1">Low accuracy in industry policy</div>
+                    <div className="flex items-center">
+                      {/* <div className="border border-orange-200 rounded-full w-10 h-10 flex items-center justify-center"> */}
+                        <AlertCircle size={25} className="text-[#F54900]" />
+                      {/* </div> */}
+                    </div>
                   </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Modern History: World Wars</span>
-                      <span className="text-orange-500 font-bold">53%</span>
-                    </div>
-                    <div className="bg-gray-200 rounded h-2 w-full"><div className="bg-orange-400 h-2 rounded" style={{width:'53%'}}></div></div>
-                    <div className="text-xs text-gray-500 mt-1">Needs review of important events</div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Geography: Climate Zones</span>
-                      <span className="text-orange-500 font-bold">39%</span>
-                    </div>
-                    <div className="bg-gray-200 rounded h-2 w-full"><div className="bg-orange-400 h-2 rounded" style={{width:'39%'}}></div></div>
-                    <div className="text-xs text-gray-500 mt-1">Improve conceptual understanding</div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Polity: Constitutional Amendments</span>
-                      <span className="text-orange-500 font-bold">52%</span>
-                    </div>
-                    <div className="bg-gray-200 rounded h-2 w-full"><div className="bg-orange-400 h-2 rounded" style={{width:'52%'}}></div></div>
-                    <div className="text-xs text-gray-500 mt-1">Review key amendment details</div>
+                  <div className="space-y-4">
+                    {focusTopics.map((t) => (
+                      <div key={t.title} className="bg-[#FFD6A7]/20 rounded-xl p-4 border border-orange-300">
+                        <div className="flex items-start justify-between">
+                          <div className="font-medium text-gray-800">{t.title}</div>
+                          <div className="text-sm text-[#CA3500] font-semibold bg-orange-100 px-3 py-1 rounded-full">{t.percent}%</div>
+                        </div>
+                        <div className="mt-3">
+                          <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                            <div className="bg-black h-3" style={{ width: `${t.percent}%` }} />
+                          </div>
+                          <div className="text-xs text-gray-500 mt-2">{t.attempts} attempts</div>
+                          <div className="text-xs text-[#CA3500] mt-1">💡 {t.note}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
+
+              {/* Your Strengths - right */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div className="font-semibold text-gray-800 mb-2 flex items-center gap-2">Your Strengths <span className="text-green-500">&#10003;</span></div>
-                <div className="space-y-4">
+                <div className="flex items-start justify-between mb-3">
                   <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Ancient Indian History</span>
-                      <span className="text-green-600 font-bold">89%</span>
-                    </div>
-                    <div className="bg-gray-200 rounded h-2 w-full"><div className="bg-green-400 h-2 rounded" style={{width:'89%'}}></div></div>
+                    <div className="font-semibold text-gray-800">Your Strengths</div>
+                    <div className="text-sm text-gray-500">Topics you excel in</div>
                   </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Indian Polity: Fundamental Rights</span>
-                      <span className="text-green-600 font-bold">88%</span>
-                    </div>
-                    <div className="bg-gray-200 rounded h-2 w-full"><div className="bg-green-400 h-2 rounded" style={{width:'88%'}}></div></div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Geography: Rivers and Mountains</span>
-                      <span className="text-green-600 font-bold">85%</span>
-                    </div>
-                    <div className="bg-gray-200 rounded h-2 w-full"><div className="bg-green-400 h-2 rounded" style={{width:'85%'}}></div></div>
+                  <div className="flex items-center">
+                    {/* <div className="border border-green-200 rounded-full w-10 h-10 flex items-center justify-center"> */}
+                      <CheckCircle size={25} className="text-green-600" />
+                    {/* </div> */}
                   </div>
                 </div>
-                <div className="mt-4 text-xs text-blue-600 text-center">Keep up the great work!<br />Maintain strengths & review new topics</div>
+                <div className="space-y-4">
+                  {strengths.map((s) => (
+                    <div key={s.title} className="bg-green-50 rounded-xl p-4 border border-green-200">
+                      <div className="flex items-start justify-between">
+                        <div className="font-medium text-gray-800">{s.title}</div>
+                        <div className="text-sm text-green-600 font-semibold bg-green-100 px-3 py-1 rounded-full">{s.percent}%</div>
+                      </div>
+                      <div className="mt-3">
+                        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                          <div className="bg-black h-3" style={{ width: `${s.percent}%` }} />
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2">{s.attempts} attempts</div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="mt-4">
+                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-center text-sm text-blue-600">🎯 Keep up the great work!<div className="text-xs text-blue-500">Maintain consistency in these topics</div></div>
+                  </div>
+                </div>
               </div>
             </div>
           </>
@@ -331,6 +325,8 @@ export default function Analytics() {
           </div>
         )}
       </div>
+      {/* Footer rendered outside the max-width container so it spans full width */}
+      <Footer />
     </div>
   );
 }

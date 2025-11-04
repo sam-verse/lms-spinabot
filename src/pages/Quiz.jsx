@@ -1,29 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SubmitTestModal from '../components/TestSeries/SubmitTestModal';
 import Header from '../components/Header/Header';
-
-const questions = [
-  {
-    question: 'Which of the following is the longest river in India?',
-    options: ['Ganga', 'Yamuna', 'Godavari', 'Narmada'],
-  },
-  {
-    question: 'Who is known as the Father of the Indian Constitution?',
-    options: ['Jawaharlal Nehru', 'B. R. Ambedkar', 'Mahatma Gandhi', 'Sardar Patel'],
-  },
-  {
-    question: 'What is the capital of Rajasthan?',
-    options: ['Jaipur', 'Jodhpur', 'Udaipur', 'Ajmer'],
-  },
-  {
-    question: 'Which planet is known as the Red Planet?',
-    options: ['Earth', 'Venus', 'Mars', 'Jupiter'],
-  },
-  {
-    question: 'Who wrote the national anthem of India?',
-    options: ['Bankim Chandra Chatterjee', 'Rabindranath Tagore', 'Sarojini Naidu', 'Subhash Chandra Bose'],
-  },
-];
+import Footer from '../components/Footer/Footer';
+import questions from './questions';
+import { ChevronLeft, RefreshCw, Save, ChevronRight } from 'lucide-react';
 
 const paletteColors = {
   answered: '#22c55e',
@@ -64,7 +44,7 @@ export default function Quiz() {
 
   // Timer logic
   const [now, setNow] = useState(Date.now());
-  React.useEffect(() => {
+  useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
@@ -96,48 +76,100 @@ export default function Quiz() {
         </div>
       </div>
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 mt-8 px-4">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 mt-8 px-4 mb-10">
         {/* Left: Question */}
-        <div className="flex-1 bg-white rounded-2xl shadow p-8 mb-8 md:mb-0">
-          <div className="flex items-center justify-between mb-4">
-            <div className="text-gray-700 font-semibold">Question {current + 1} of {questions.length}</div>
-            <button className="border px-3 py-1 rounded text-gray-600 text-sm hover:bg-gray-50" onClick={handleFlag}>
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="inline mr-1"><path d="M4 22V5a2 2 0 0 1 2-2h11.5a1 1 0 0 1 .8 1.6l-1.38 2.07a1 1 0 0 0 0 1.13l1.38 2.07a1 1 0 0 1-.8 1.6H6"/></svg>
-              Flag for Review
-            </button>
+        <div className="flex-1 bg-white rounded-2xl shadow p-0 mb-8 md:mb-0 overflow-hidden">
+          <div className="bg-gray-200 px-6 py-5">
+            <div className="flex items-center justify-between">
+              <div className="text-gray-700 text-sm">Question {current + 1} of {questions.length}</div>
+              <button className="border px-3 py-1 rounded text-gray-600 text-sm hover:bg-gray-50 bg-white shadow-sm" onClick={handleFlag}>
+                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="inline mr-1"><path d="M4 22V5a2 2 0 0 1 2-2h11.5a1 1 0 0 1 .8 1.6l-1.38 2.07a1 1 0 0 0 0 1.13l1.38 2.07a1 1 0 0 1-.8 1.6H6"/></svg>
+                Flag for Review
+              </button>
+            </div>
+            <div className="mt-3">
+              <div className="w-56 relative">
+                <div className="h-2 bg-[#e6e6e6] rounded" />
+                <div
+                  className="absolute top-0 left-0 h-2 bg-[#0f1724] rounded transition-all"
+                  style={{ width: `${((current + 1) / questions.length) * 100}%` }}
+                />
+                {/* tick markers for visual 5-part segmentation */}
+                {Array.from({ length: questions.length }).map((_, i) => {
+                  const left = questions.length > 1 ? (i / (questions.length - 1)) * 100 : 0;
+                  return (
+                    <div
+                      key={i}
+                      className="absolute top-0 h-2 w-[2px] bg-white/70"
+                      style={{ left: `${left}%`, transform: 'translateX(-50%)' }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           </div>
-          <div className="w-full h-2 bg-gray-100 rounded mb-6">
-            <div className="h-2 bg-blue-400 rounded" style={{ width: `${((current + 1) / questions.length) * 100}%` }} />
-          </div>
+          <div className="p-8">
           <div className="text-lg font-semibold mb-6">{questions[current].question}</div>
           <div className="space-y-4 mb-8">
             {questions[current].options.map((opt, idx) => (
-              <label key={idx} className={`flex items-center px-6 py-3 rounded-lg border cursor-pointer transition-all ${answers[current] === idx ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'} hover:border-blue-400`}>
-                <input
-                  type="radio"
-                  name={`q${current}`}
-                  checked={answers[current] === idx}
-                  onChange={() => handleOption(idx)}
-                  className="mr-4 accent-blue-600"
-                />
-                <span className="text-base">{opt}</span>
+              <label
+                key={idx}
+                className={`flex items-center px-6 py-4 rounded-lg border cursor-pointer transition-all ${answers[current] === idx ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'}`}
+              >
+                  <input
+                    type="radio"
+                    name={`q${current}`}
+                    checked={answers[current] === idx}
+                    onChange={() => handleOption(idx)}
+                    className="mr-4 w-4 h-4 accent-blue-600"
+                  />
+                  <span className="text-base">{opt.text}</span>
               </label>
             ))}
           </div>
-          <div className="flex gap-2 mt-4">
-            <button className="border px-4 py-2 rounded text-gray-600" onClick={handlePrev} disabled={current === 0}>Previous</button>
-            <button className="border px-4 py-2 rounded text-gray-600" onClick={handleClear}>Clear Response</button>
-            <button className="border px-4 py-2 rounded text-gray-600" onClick={handleNext} disabled={current === questions.length - 1}>Next</button>
+          <div className="flex items-center gap-3 mt-4">
             <button
-              className="bg-gradient-to-r from-blue-600 to-purple-500 text-white px-6 py-2 rounded-lg font-bold ml-auto"
-              onClick={() => {
-                // Save is implicit, just go to next if not last
-                if (current < questions.length - 1) setCurrent(current + 1);
-              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-md border text-gray-600 disabled:opacity-50"
+              onClick={handlePrev}
+              disabled={current === 0}
             >
-              Save & Next
+              <ChevronLeft size={16} />
+              Previous
             </button>
+
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-md border text-gray-600"
+              onClick={handleClear}
+            >
+              <RefreshCw size={16} />
+              Clear Response
+            </button>
+
+            <div className="ml-auto flex items-center gap-3">
+              <button
+                className="flex items-center gap-2 px-4 py-2 bg-white border rounded-full text-gray-700 shadow-sm"
+                onClick={() => {
+                  // Save implicitly and go next
+                  if (current < questions.length - 1) setCurrent(current + 1);
+                }}
+              >
+                <Save size={16} />
+                Save & Next
+              </button>
+
+              <button
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full"
+                onClick={() => {
+                  if (current < questions.length - 1) setCurrent((c) => c + 1);
+                }}
+                disabled={current === questions.length - 1}
+              >
+                Next
+                <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
+        </div>
         </div>
         {/* Right: Palette */}
         <div className="w-full md:w-[340px] flex flex-col gap-6">
@@ -207,6 +239,7 @@ export default function Quiz() {
         notAnswered={answers.filter((a) => a === null).length}
         flagged={flagged.length}
       />
+      <Footer />
     </div>
   );
 }

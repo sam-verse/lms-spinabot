@@ -18,21 +18,27 @@ const radarData = {
 		{
 			label: "Average",
 			data: [70, 72, 75, 65, 68],
-			backgroundColor: "rgba(163,163,163,0.2)",
-			borderColor: "#a3a3a3",
-			pointBackgroundColor: "#a3a3a3",
-			pointBorderColor: "#a3a3a3",
+			// stronger grey fill for the 'Average' polygon (increased opacity)
+			backgroundColor: "rgba(156, 163, 175, 0.17)",
+			borderColor: "#909294ff",
+			pointBackgroundColor: "#9ca3af",
+			pointBorderColor: "#ffffff",
 			borderWidth: 2,
+			pointRadius: 4,
+			pointHoverRadius: 6,
 			fill: true,
 		},
 		{
 			label: "Your Score",
 			data: [85, 78, 92, 68, 75],
-			backgroundColor: "rgba(59,130,246,0.2)",
-			borderColor: "#2563eb",
-			pointBackgroundColor: "#2563eb",
-			pointBorderColor: "#2563eb",
-			borderWidth: 2,
+			// stronger blue fill and slightly stronger border for 'Your Score' (increased opacity)
+			backgroundColor: "#3b83f68e",
+			borderColor: "#3B82F6",
+			pointBackgroundColor: "#3B82F6",
+			pointBorderColor: "#ffffff",
+			borderWidth: 3,
+			pointRadius: 5,
+			pointHoverRadius: 7,
 			fill: true,
 		},
 	],
@@ -40,75 +46,132 @@ const radarData = {
 
 const radarOptions = {
 	responsive: true,
+	// allow the chart to expand inside its container
+	maintainAspectRatio: false,
 	plugins: {
+		// disable built-in legend because we render a custom legend below the chart
 		legend: {
-			display: true,
-			position: "bottom",
-			labels: {
-				usePointStyle: true,
-				color: "#6b7280",
-				font: { size: 14 },
-				padding: 24,
-			},
+			display: false,
+		},
+		tooltip: {
+			// subtle tooltip styling
+			backgroundColor: "rgba(17,24,39,0.95)",
+			titleColor: "#fff",
+			bodyColor: "#e5e7eb",
 		},
 	},
 	scales: {
 		r: {
 			angleLines: { color: "#e5e7eb" },
 			grid: { color: "#e5e7eb" },
-			pointLabels: { color: "#6b7280", font: { size: 14 } },
+			// axis labels (the subject names)
+			pointLabels: { color: "#6b7280", font: { size: 13 } },
 			min: 0,
 			max: 100,
-			ticks: { stepSize: 25, color: "#6b7280" },
+			ticks: {
+				stepSize: 25,
+				color: "#9ca3af",
+				// show the tick labels (0/25/50/75/100) but subtle
+				backdropColor: "transparent",
+				font: { size: 11 },
+			},
+		},
+	},
+	elements: {
+		point: {
+			// default point size (dataset overrides apply per-dataset)
+			radius: 3,
+		},
+		line: {
+			// smoothness of the radar lines (0 = straight)
+			tension: 0.15,
+		},
+	},
+	layout: {
+		padding: {
+			top: 8,
+			bottom: 8,
+			left: 8,
+			right: 8,
 		},
 	},
 };
 
 const subjects = [
-	{ name: "History", avg: 85, peer: 70, diff: 15 },
-	{ name: "Geography", avg: 78, peer: 72, diff: 6 },
-	{ name: "Polity", avg: 92, peer: 75, diff: 17 },
-	{ name: "Economy", avg: 68, peer: 65, diff: 3 },
-	{ name: "Science", avg: 75, peer: 68, diff: 7 },
+	// swapped so `avg` is the lower benchmark and `peer` is the higher student score
+	{ name: "History", avg: 70, peer: 85 },
+	{ name: "Geography", avg: 72, peer: 78 },
+	{ name: "Polity", avg: 75, peer: 92 },
+	{ name: "Economy", avg: 65, peer: 68 },
+	{ name: "Science", avg: 68, peer: 75 },
 ];
 
 export default function PeerComparison() {
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+		<div className=" grid grid-cols-1 md:grid-cols-2 gap-8 mb-18">
 			{/* Radar Chart Card */}
 			<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 flex flex-col items-center">
 				<div className="font-semibold text-gray-800 text-lg mb-1">Subject-wise Performance</div>
 				<div className="text-sm text-gray-500 mb-6">Comprehensive analysis across subjects</div>
-				<div className="w-full flex items-center justify-center" style={{ minHeight: 320 }}>
+				<div className="w-full flex items-center justify-center" style={{ minHeight: 400, height: 400 }}>
 					<Radar data={radarData} options={radarOptions} />
 				</div>
 				<div className="flex gap-6 justify-center text-xs mt-4">
-					<span className="flex items-center gap-1 text-gray-400"><span className="w-3 h-3 inline-block rounded-full bg-gray-400"></span> Average</span>
-					<span className="flex items-center gap-1 text-blue-600"><span className="w-3 h-3 inline-block rounded-full bg-blue-600"></span> Your Score</span>
+					<span className="flex items-center gap-1 text-gray-400"><span className="w-3 h-3 inline-block  bg-gray-400"></span> Average</span>
+					<span className="flex items-center gap-1 text-[#3B82F6]"><span className="w-3 h-3 inline-block  bg-blue-600"></span> Your Score</span>
 				</div>
 			</div>
 
-			{/* Subject Breakdown Card */}
+			{/* Subject Breakdown Card (styled to match reference design) */}
 			<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
 				<div className="font-semibold text-gray-800 text-lg mb-1">Detailed Subject Breakdown</div>
 				<div className="text-sm text-gray-500 mb-6">Your performance vs. average</div>
-				<div className="space-y-6">
+
+				<div className="space-y-5">
 					{subjects.map((sub) => (
 						<div key={sub.name}>
-							<div className="flex justify-between items-center mb-1">
-								<span className="font-semibold text-gray-800">{sub.name}</span>
-								<span className="text-xs text-gray-500">Avg:</span>
-								<span className="font-bold text-green-600 text-sm">{sub.avg}%</span>
-							</div>
-							<div className="flex items-center gap-2 mb-1">
-								<span className="text-xs text-gray-400">↑ {sub.diff}% above average</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<div className="flex-1 bg-gray-200 rounded h-3 relative">
-									<div className="bg-gray-900 h-3 rounded absolute left-0 top-0" style={{ width: `${sub.avg}%` }}></div>
-									<div className="bg-blue-600 h-3 rounded absolute left-0 top-0" style={{ width: `${sub.peer}%`, opacity: 0.5 }}></div>
+							{/* header: subject name + avg stack + student pill */}
+							<div className="flex items-center justify-between mb-1">
+								<div className="font-semibold text-gray-800">{sub.name}</div>
+
+								<div className="flex items-center gap-3">
+									<div className="text-right text-[11px] text-gray-500 leading-tight">
+										<div className="text-gray-500">Avg:</div>
+										<div className="font-semibold text-[13px] text-black">{sub.avg}%</div>
+									</div>
+
+									<div className="ml-2 inline-flex items-center justify-center bg-[#ECFDF5] text-[#16A34A] rounded-full px-3 py-1 text-sm font-semibold">
+										{sub.peer}%
+									</div>
 								</div>
-								<span className="text-xs text-gray-500">{sub.peer}%</span>
+							</div>
+
+							{/* progress bar with student fill and avg marker */}
+							<div className="relative h-3 rounded-full bg-gray-200 overflow-visible">
+								{/* show increase/decrease percentage under the bar */}
+								{/* compute difference inline and render arrow + text */}
+
+								{/* student score fill (dark) */}
+								<div
+									className="absolute left-0 top-0 h-3 rounded-full"
+									style={{ width: `${sub.peer}%`, background: '#05040A' }}
+								/>
+
+								{/* crisp avg marker: thin white line with subtle border */}
+								<div
+									className="absolute top-0 flex items-center"
+									style={{ left: `${sub.avg}%`, transform: 'translateX(-50%)' }}
+								>
+									<div className="w-px h-3 bg-white border border-gray-300 rounded-sm" />
+								</div>
+							</div>
+
+							<div className="text-xs text-gray-400 mt-1">
+								{sub.peer > sub.avg
+									? `↑ ${sub.peer - sub.avg}% above average`
+									: sub.peer < sub.avg
+									? `↓ ${sub.avg - sub.peer}% below average`
+									: `No change`}
 							</div>
 						</div>
 					))}
