@@ -129,42 +129,41 @@ export default function Quiz() {
           </div>
           <div className="flex items-center gap-3 mt-4">
             <button
-              className="flex items-center gap-2 px-4 py-2 rounded-md border text-gray-600 disabled:opacity-50"
+              className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 text-gray-600 bg-white shadow-sm disabled:opacity-50"
               onClick={handlePrev}
               disabled={current === 0}
             >
               <ChevronLeft size={16} />
-              Previous
+              <span className="text-sm">Previous</span>
             </button>
 
             <button
-              className="flex items-center gap-2 px-4 py-2 rounded-md border text-gray-600"
+              className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 text-gray-600 bg-white shadow-sm"
               onClick={handleClear}
             >
               <RefreshCw size={16} />
-              Clear Response
+              <span className="text-sm">Clear Response</span>
             </button>
 
             <div className="ml-auto flex items-center gap-3">
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-white border rounded-full text-gray-700 shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-gray-700 shadow-sm"
                 onClick={() => {
-                  // Save implicitly and go next
                   if (current < questions.length - 1) setCurrent(current + 1);
                 }}
               >
                 <Save size={16} />
-                Save & Next
+                <span className="text-sm">Save & Next</span>
               </button>
 
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg"
                 onClick={() => {
                   if (current < questions.length - 1) setCurrent((c) => c + 1);
                 }}
                 disabled={current === questions.length - 1}
               >
-                Next
+                <span className="text-sm">Next</span>
                 <ChevronRight size={16} />
               </button>
             </div>
@@ -179,44 +178,44 @@ export default function Quiz() {
               <span className="text-white font-semibold text-base">Question Palette</span>
             </div>
             {/* Stat box */}
-            <div className="bg-gray-50 px-6 py-4 flex flex-col gap-2 text-[15px] border-b border-gray-200">
-              <div className="flex justify-between mb-1">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-green-600 font-semibold">Answered: <span className="font-bold">{answers.filter((a) => a !== null).length}</span></span>
-                  <span className="text-gray-600">Not Answered: <span className="font-bold">{answers.filter((a) => a === null).length}</span></span>
-                </div>
-                <div className="flex flex-col gap-0.5 text-right">
-                  <span className="text-yellow-500 font-semibold">Flagged: <span className="font-bold">{flagged.length}</span></span>
-                  <span className="text-gray-600">Total: <span className="font-bold">{questions.length}</span></span>
+            <div className="px-6 py-4 border-b border-gray-200 bg-white">
+              <div className="bg-gray-50 rounded-lg p-4 shadow-sm">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="space-y-2">
+                    <div className="text-gray-500">Answered: <span className="font-bold text-green-600">{answers.filter((a) => a !== null).length}</span></div>
+                    <div className="text-gray-500">Not Answered: <span className="font-bold">{answers.filter((a) => a === null).length}</span></div>
+                  </div>
+                  <div className="space-y-2 text-right">
+                    <div className="text-gray-500">Flagged: <span className="font-bold text-yellow-500">{flagged.length}</span></div>
+                    <div className="text-gray-500">Total: <span className="font-bold">{questions.length}</span></div>
+                  </div>
                 </div>
               </div>
             </div>
             {/* Number grid */}
-            <div className="px-6 py-3 flex flex-wrap gap-2 border-b border-gray-200">
-              {questions.map((_, idx) => {
-                let color = 'bg-white border-gray-300';
-                let text = 'text-gray-700';
-                if (answers[idx] !== null) { color = 'bg-green-500 border-green-500'; text = 'text-white'; }
-                if (flagged.includes(idx)) { color = 'bg-yellow-400 border-yellow-400'; text = 'text-white'; }
-                if (idx === current) { color = 'bg-blue-500 border-blue-500'; text = 'text-white'; }
-                return (
-                  <button
-                    key={idx}
-                    className={`w-9 h-9 rounded border text-base font-bold ${color} ${text} transition`}
-                    onClick={() => handleNav(idx)}
-                  >
-                    {idx + 1}
-                  </button>
-                );
-              })}
+            <div className="px-6 py-3 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                {questions.map((_, idx) => {
+                  const isAnswered = answers[idx] !== null;
+                  const isFlagged = flagged.includes(idx);
+                  const isCurrent = idx === current;
+                  const base = "w-10 h-10 flex items-center justify-center rounded-md border text-sm font-medium";
+                  const classes = isCurrent ? `${base} bg-blue-500 border-blue-500 text-white` : isFlagged ? `${base} bg-yellow-400 border-yellow-400 text-white` : isAnswered ? `${base} bg-green-500 border-green-500 text-white` : `${base} bg-white border-gray-300 text-gray-700`;
+                  return (
+                    <button key={idx} className={classes} onClick={() => handleNav(idx)}>
+                      {idx + 1}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             {/* Legend */}
-            <div className="px-6 py-3 border-b border-gray-200">
-              <div className="flex flex-wrap gap-4 text-sm">
-                <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-green-500 inline-block border border-green-500" /> Answered</div>
-                <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-white border border-gray-300 inline-block" /> Not Answered</div>
-                <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-yellow-400 border border-yellow-400 inline-block" /> Flagged</div>
-                <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-blue-500 border border-blue-500 inline-block" /> Current</div>
+            <div className="px-6 py-4">
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center gap-3"><span className="w-4 h-4 rounded bg-green-500 inline-block border border-green-500" /> <span>Answered</span></div>
+                <div className="flex items-center gap-3"><span className="w-4 h-4 rounded bg-white inline-block border border-gray-300" /> <span>Not Answered</span></div>
+                <div className="flex items-center gap-3"><span className="w-4 h-4 rounded bg-yellow-400 inline-block border border-yellow-400" /> <span>Flagged</span></div>
+                <div className="flex items-center gap-3"><span className="w-4 h-4 rounded bg-blue-500 inline-block border border-blue-500" /> <span>Current</span></div>
               </div>
             </div>
             {/* Submit button */}
